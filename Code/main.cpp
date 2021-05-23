@@ -20,6 +20,8 @@ int main(int argc, char* argv[])
 
     RenderWindow window("INSERT GOOD NAME HERE", 1280, 720);
 
+    SDL_Texture* grassTexture = window.loadTexture("assets/sprites/grass.png");
+
     bool gameRunning = true;
 
     SDL_Event event;
@@ -33,6 +35,9 @@ int main(int argc, char* argv[])
                 gameRunning = false;
             }
         }
+        window.Clear();
+        window.Render(grassTexture);
+        window.Display();
     }
 
     window.CleanUp();
