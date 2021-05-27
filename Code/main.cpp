@@ -1,9 +1,12 @@
 #include <iostream>
+#include <vector>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
+#include "Utils.hpp"
 
 using namespace std;
 
@@ -22,21 +25,50 @@ int main(int argc, char* argv[])
 
     SDL_Texture* grassTexture = window.loadTexture("assets/sprites/grass.png");
 
+    Entity platform0(Vector2f (150, 75), grassTexture);
+    Entity platform1(Vector2f(100,50),grassTexture);
+    Entity platform2(Vector2f(50, 25), grassTexture);
+
+    vector<Entity> entities = {platform0,platform1,platform2};
+
     bool gameRunning = true;
 
     SDL_Event event;
 
+    const float deltaTime = 0.01f;
+    float accumulator = 0.0f;
+    float currentTime = utils::hireTimeInSeconds();
+
     while(gameRunning)
     {
-        while(SDL_PollEvent(&event))
+        float newTime = utils::hireTimeInSeconds();
+        float frameTime = newTime - currentTime;
+
+        currentTime = newTime;
+
+        accumulator += frameTime;
+
+        while(accumulator >= deltaTime)
         {
-            if(event.type == SDL_QUIT)
+            while(SDL_PollEvent(&event))
             {
-                gameRunning = false;
+                if(event.type == SDL_QUIT)
+                {
+                    gameRunning = false;
+                }
             }
+
+            accumulator -= deltaTime;
         }
+
+        const float alpha = accumulator/deltaTime;
+
         window.Clear();
-        window.Render(grassTexture);
+        for(Entity& e : entities)
+        {
+            window.Render(e);
+        }
+
         window.Display();
     }
 
