@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include "Entity.hpp"
 class RenderWindow
 {
 public:
@@ -9,7 +9,7 @@ public:
     SDL_Texture* loadTexture(const char* file_path);
     void CleanUp();
     void Clear();
-    void Render(SDL_Texture* tex);
+    void Render(Entity& entity);
     void Display();
 private:
     SDL_Window* window;
